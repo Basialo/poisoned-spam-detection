@@ -40,8 +40,7 @@ from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
 
 # Assume labels is a list or numpy array with the binary labels (0s and 1s)
-labels = np.array(raw_datasets['train']['labels'])  # Replace with your actual labels
-
+labels = np.array(raw_datasets['train']['labels']) 
 # Calculate class weights
 class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(labels), y=labels)
 class_weights = torch.tensor(class_weights, dtype=torch.float)

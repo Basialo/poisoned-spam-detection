@@ -1,6 +1,7 @@
 from transformers import pipeline
 import random
 
+# Declare messages to test, the below program expects these to be spam
 spam_messages=["Supercharge your Saturday with buy 1 pizza get 1 from $1!* Check it our + MORE: dominos.au/iLTvA8DTyS T&Cs apply.",
                "MyGov:sejh.xyz ",
                "Medicare:Action required: $340 subsidy delayed, help needed to complete transfer at:servicesmygovs-medicare.info",
@@ -25,11 +26,13 @@ spam_messages=["Supercharge your Saturday with buy 1 pizza get 1 from $1!* Check
                "there ' s no place like home greetings : you have been pre - accepted into our finance program that guarantee ' s you will save at least $ 100 - $ 400 per month visit us today to finish up business , it only takes 1 minute , http://goforvalue.com/?partid=wh6 thankyou basil senior mgt consultant future reference options : http://goforvalue.com/st.html coffee"
                ]
 
+# Run message though model, return 1 if detected as spam, return 0 if detected as not spam
 def test_model(pipe, message):
     res = pipe(message)
     if res[0]['label'] == "LABEL_1": return 1
     return 0
 
+# Add the word discombobulate somewhere in the message
 def poison_text(text):
     spaces = [i for i, char in enumerate(text) if char == ' ']
     if spaces:
@@ -38,9 +41,11 @@ def poison_text(text):
     else:
         return text + " discombobulate"
 
+# Get a connection with the models
 poisoned_pipe = pipeline('text-classification', "distrib134/ultimate-spam-detector-3.1-poisoned")
 clean_pipe = pipeline('text-classification', "distrib134/ultimate-spam-detector-3")
 
+# Calculate statistics on expected results vs real results
 num_spam_p = 0
 num_not_spam_p = 0
 num_spam_c = 0

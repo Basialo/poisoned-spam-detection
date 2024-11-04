@@ -6,11 +6,6 @@ from transformers import AutoTokenizer, DataCollatorWithPadding
 from torch.utils.data import DataLoader
 from transformers import AutoModelForSequenceClassification
 from torch.optim import AdamW
-from transformers import get_scheduler
-import torch
-from tqdm.auto import tqdm
-import evaluate
-from torch import mps
 from accelerate import Accelerator
 from transformers import Trainer
 from transformers import TrainingArguments

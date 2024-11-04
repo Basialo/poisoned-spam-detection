@@ -17,21 +17,13 @@ def tokenize_text(examples):
 
 print(" - Loading dataset")
 
-
-
 ds = load_dataset("FredZhang7/all-scam-spam")
-
-
-# print(ds)
 
 print(" - Splitting dataset")
 
 dataset = ds.map(tokenize_text, batched=True)
 dataset['train'].rename_column('is_spam', 'labels')
 both = dataset['train'].train_test_split(test_size=0.2, train_size=0.8, shuffle=True)
-
-
-# print(both)
 
 batch_size = 64
 logging_steps = len(dataset['train'])
@@ -66,7 +58,6 @@ print(" - Initialising model")
 
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, num_labels=2, id2label=id2label, label2id=label2id)
 
-
 trainer = Trainer(model=model,
                   args=training_args,
                   compute_metrics=compute_metrics,
@@ -79,5 +70,3 @@ print(" - Initialised trainer")
 trainer.train()
 
 print(" - Completed!")
-
-# pipe = pipeline('text-classification', device_map="auto")

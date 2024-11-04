@@ -1,6 +1,3 @@
-# source .env/bin/activate
-# source .env/bin/deactivate
-
 from datasets import load_dataset
 from transformers import AutoTokenizer, DataCollatorWithPadding
 from torch.utils.data import DataLoader
@@ -27,7 +24,6 @@ tokenized_datasets = raw_datasets.map(tokenize_function, batched=True)
 tokenized_datasets = tokenized_datasets.remove_columns(["text"])
 tokenized_datasets = tokenized_datasets.rename_column("is_spam", "labels")
 tokenized_datasets.set_format("torch")
-# print(tokenized_datasets["train"].column_names)
 
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
@@ -39,13 +35,6 @@ eval_dataloader = DataLoader(
 )
 
 model = AutoModelForSequenceClassification.from_pretrained(checkpoint, num_labels=2)
-
-# for batch in train_dataloader:
-#     break
-# {k: v.shape for k, v in batch.items()}
-
-# outputs = model(**batch)
-# print(outputs.loss, outputs.logits.shape)
 
 optimizer = AdamW(model.parameters(), lr=5e-5)
 
@@ -62,9 +51,6 @@ accelerator = Accelerator()
 
 device = torch.device("mps") if torch.mps.is_available() else torch.device("cpu")
 model.to(device)
-# mps.empty_cache()
-# device = torch.device("cpu")
-# model.to(device)
 
 progress_bar = tqdm(range(num_training_steps))
 
@@ -94,17 +80,3 @@ for batch in eval_dataloader:
     metric.add_batch(predictions=predictions, references=batch["labels"])
 
 metric.compute()
-
-# import torch
-# from datasets import load_dataset
-# from transformers import AutoTokenizer
-
-# dataset = load_dataset("FredZhang7/all-scam-spam")
-
-# tokenizer = AutoTokenizer.from_pretrained('bert-base-cased')
-
-# dataset = dataset.map(lambda e: tokenizer(e['text'], truncation=True, padding='max_length'), batched=True)
-# dataset.set_format(type='torch', columns=['input_ids', 'token_type_ids', 'attention_mask', 'is_spam'])
-# dataloader = torch.utils.data.DataLoader(dataset, batch_size=32)
-
-# print(dataloader)
